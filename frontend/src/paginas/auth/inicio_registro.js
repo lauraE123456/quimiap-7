@@ -5,7 +5,6 @@ import Footer from "../../componentes/footer";
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import bcrypt from 'bcryptjs';
 
 const Inicio_registro = () => {
     const [formData, setFormData] = useState({
@@ -142,13 +141,13 @@ const Inicio_registro = () => {
                 return; // Detener el flujo en caso de error en la verificación
             }
         
-            // Encripta la contraseña antes de enviarla al servidor
-            const hashedPassword = bcrypt.hashSync(formData.contrasena, 10);
+            // // Encripta la contraseña antes de enviarla al servidor
+            // const hashedPassword = bcrypt.hashSync(formData.contrasena, 10);
         
             // Si el correo no existe, proceder con el registro
             const response = await axios.post("http://localhost:4001/registrarUser", {
                 ...formData,
-                contrasena: hashedPassword,
+                contrasena: formData.contrasena,
                 estado: "Pendiente" // Cambia el estado a pendiente
             });
         
@@ -311,14 +310,15 @@ const Inicio_registro = () => {
                     });
     
                   // Navegar según el rol del usuario
-const route = user.rol.toLowerCase() === "cliente" ? "/" :
-user.rol.toLowerCase() === "jefe de produccion" ? "/jf_produccion.js" :
-user.rol.toLowerCase() === "domiciliario" ? "/domiciliario.js" :
-user.rol.toLowerCase() === "gerente" ? "/usuarios_admin.js" : "/";
+                    const route = user.rol.toLowerCase() === "cliente" ? "/" :
+                    user.rol.toLowerCase() === "jefe de produccion" ? "/jf_produccion.js" :
+                    user.rol.toLowerCase() === "domiciliario" ? "/domiciliario.js" :
+                    user.rol.toLowerCase() === "gerente" ? "/usuarios_admin.js" : "/";
 
-navigate(route);
+                    console.log("Redirigiendo a:", route);
+                    navigate(route);
 
-                } else if (user.estado === "Pendiente") {
+                } else if (user.estado === "pendiente") {
                     // Mostrar alerta si el usuario está pendiente
                     await Swal.fire({
                         title: 'Cuenta Pendiente',
@@ -327,7 +327,7 @@ navigate(route);
                         timer: 2000,
                         showConfirmButton: false
                     });
-                } else if (user.estado === "Inactivo") {
+                } else if (user.estado === "inactivo") {
                     // Mostrar alerta si el usuario está inactivo
                     await Swal.fire({
                         title: 'Cuenta Inactiva',

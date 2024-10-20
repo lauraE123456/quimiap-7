@@ -128,7 +128,9 @@ app.post('/registrarUser', async (req, res) => {
             if (!contrasena) {
                 return res.status(400).json({ success: false, message: 'La contraseña es requerida para clientes.' });
             }
+            console.log("Contraseña proporcionada por el cliente:", contrasena);
             contraseñaUsar = contrasena;
+
         } else {
             // Rol no reconocido
             return res.status(400).json({ success: false, message: 'Rol no reconocido.' });
@@ -136,6 +138,7 @@ app.post('/registrarUser', async (req, res) => {
 
         // Hashear la contraseña antes de guardarla
         const hashedPassword = bcrypt.hashSync(contraseñaUsar, 10);
+        console.log("Hashed password:", hashedPassword);
 
         // Preparar los datos para el procedimiento almacenado
         const datosUsuario = [nombres, apellidos, telefono, correo_electronico, tipo_doc, num_doc, hashedPassword, rol];
@@ -308,7 +311,8 @@ app.post('/login', (req, res) => {
               id_usuario: user.id_usuario,
               nombres: user.nombres,
               apellidos: user.apellidos,
-              rol: user.rol
+              rol: user.rol,
+              estado: user.estado
           };
 
           // Devuelve la respuesta con los datos del usuario
@@ -319,7 +323,8 @@ app.post('/login', (req, res) => {
                   id_usuario: user.id_usuario,
                   nombres: user.nombres,
                   apellidos: user.apellidos,
-                  rol: user.rol
+                  rol: user.rol,
+                  estado:user.estado
               }
           });
       });
